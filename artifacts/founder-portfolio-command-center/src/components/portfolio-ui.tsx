@@ -27,6 +27,40 @@ export function ProjectCard({ project, compact = false }: { project: Project; co
   </Link>;
 }
 
+export function FamilyProjectCard({ project }: { project: Project }) {
+  return <Link href={`/projects/${encodeURIComponent(project.projectId)}`} className="panel focus-ring group block rounded-2xl p-5 transition hover:-translate-y-0.5 hover:border-foreground/25" data-testid={`family-project-${project.projectId}`}>
+    <div className="flex items-start justify-between gap-3">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-extrabold">{project.project}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{project.category || 'Category not recorded'}</p>
+      </div>
+      <ArrowUpRight size={15} className="shrink-0 text-muted-foreground transition group-hover:text-foreground" />
+    </div>
+    <div className="mt-4 flex flex-wrap items-center gap-2">
+      <StatusPill value={project.lifecycleStage} stage />
+      <StatusPill value={project.status} />
+      <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-bold text-muted-foreground">{project.levelPercent}%</span>
+    </div>
+    <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-secondary">
+      <div className="h-full rounded-full bg-foreground transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} />
+    </div>
+    <dl className="mt-4 space-y-3 text-xs">
+      <div>
+        <dt className="eyebrow text-muted-foreground">Current gate</dt>
+        <dd className="mt-1 leading-5">{project.currentGate || 'Not recorded'}</dd>
+      </div>
+      {project.blocker && <div>
+        <dt className="eyebrow text-muted-foreground">Blocker</dt>
+        <dd className="mt-1 leading-5 text-amber-800">{project.blocker}</dd>
+      </div>}
+      <div>
+        <dt className="eyebrow text-muted-foreground">Exact next action</dt>
+        <dd className="mt-1 leading-5 text-foreground">{project.exactNextAction || 'Not recorded'}</dd>
+      </div>
+    </dl>
+  </Link>;
+}
+
 export function EmptyState({ title, description }: { title: string; description: string }) {
   return <div className="panel flex min-h-48 flex-col items-center justify-center rounded-2xl p-8 text-center"><div className="grid size-10 place-items-center rounded-xl bg-secondary"><LockKeyhole size={17} className="text-muted-foreground" /></div><h3 className="mt-4 text-sm font-extrabold">{title}</h3><p className="mt-1 max-w-sm text-xs leading-5 text-muted-foreground">{description}</p></div>;
 }

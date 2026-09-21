@@ -39,6 +39,7 @@ function Router() {
           <Switch>
             <Route path="/" component={Dashboard} />
             <Route path="/portfolio" component={Portfolio} />
+            <Route path="/portfolio/family/:family" component={Portfolio} />
             <Route path="/projects" component={Projects} />
             <Route path="/projects/:projectId" component={ProjectDetail} />
             <Route path="/waiting" component={Waiting} />
