@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Founder Portfolio Command Center"
+description = "A private, read-only founder dashboard for monitoring a software portfolio from Google Sheets, with live counts, family browsing, project detail, gates, beta readiness, and change history."
+version = "1.0.0"
+id = "artifacts/founder-portfolio-command-center"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18277
+
+[services.development]
+run = "pnpm --filter @workspace/founder-portfolio-command-center run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/founder-portfolio-command-center", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/founder-portfolio-command-center/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18277"
+BASE_PATH = "/"

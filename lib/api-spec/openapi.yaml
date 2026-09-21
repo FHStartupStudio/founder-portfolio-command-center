@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: portfolio
+    description: Read-only founder portfolio operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /portfolio:
+    get:
+      operationId: getPortfolio
+      tags: [portfolio]
+      summary: Load the founder portfolio
+      description: Returns the latest portfolio snapshot from Google Sheets or clearly labeled sample data when live credentials have never worked.
+      responses:
+        "200":
+          description: Portfolio snapshot
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortfolioSnapshot"
+  /portfolio/projects/{projectId}:
+    get:
+      operationId: getPortfolioProject
+      tags: [portfolio]
+      summary: Load one project from the founder portfolio
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Project detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "404":
+          description: Project was not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +72,97 @@ components:
           type: string
       required:
         - status
+    Project:
+      type: object
+      required:
+        - projectId
+        - project
+        - portfolioFamily
+        - category
+        - lifecycleStage
+        - levelPercent
+        - status
+        - latestCompletedGate
+        - currentGate
+        - blocker
+        - exactNextAction
+        - doNotRedo
+        - technicalStackProductType
+        - currentWorkPlatform
+        - betaStatus
+        - launchStatus
+        - lastActivity
+        - lastTrackerUpdate
+        - evidenceCheckpoint
+        - notes
+      properties:
+        projectId: { type: string }
+        project: { type: string }
+        portfolioFamily: { type: string }
+        chatGptProjectName: { type: string }
+        category: { type: string }
+        lifecycleStage: { type: string }
+        levelPercent: { type: number }
+        status: { type: string }
+        latestCompletedGate: { type: string }
+        currentGate: { type: string }
+        blocker: { type: string }
+        exactNextAction: { type: string }
+        doNotRedo: { type: string }
+        technicalStackProductType: { type: string }
+        currentWorkPlatform: { type: string }
+        betaStatus: { type: string }
+        launchStatus: { type: string }
+        lastActivity: { type: string }
+        lastTrackerUpdate: { type: string }
+        evidenceCheckpoint: { type: string }
+        notes: { type: string }
+    ChangeLogEntry:
+      type: object
+      required:
+        - timestamp
+        - project
+        - previousStage
+        - newStage
+        - previousStatus
+        - newStatus
+        - gateChange
+        - evidence
+        - updatedBy
+      properties:
+        timestamp: { type: string }
+        project: { type: string }
+        previousStage: { type: string }
+        newStage: { type: string }
+        previousStatus: { type: string }
+        newStatus: { type: string }
+        gateChange: { type: string }
+        evidence: { type: string }
+        updatedBy: { type: string }
+    PortfolioSnapshot:
+      type: object
+      required:
+        - mode
+        - syncedAt
+        - projects
+        - changeLog
+      properties:
+        mode:
+          type: string
+          enum: [LIVE DATA, SAMPLE MODE]
+        syncedAt: { type: string }
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+        changeLog:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChangeLogEntry"
+        warning: { type: ["string", "null"] }
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
 
