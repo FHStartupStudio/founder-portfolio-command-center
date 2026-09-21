@@ -22,8 +22,8 @@ export function StatCard({ label, value, detail, accent = 'default' }: { label: 
 export function ProjectCard({ project, compact = false }: { project: Project; compact?: boolean }) {
   return <Link href={`/projects/${encodeURIComponent(project.projectId)}`} className={`panel focus-ring group block rounded-2xl transition hover:-translate-y-0.5 hover:border-foreground/25 ${compact ? 'p-4' : 'p-5'}`} data-testid={`card-project-${project.projectId}`}>
     <div className="flex items-start justify-between gap-3"><div className="flex min-w-0 items-center gap-3"><div className="grid size-9 shrink-0 place-items-center rounded-xl bg-secondary text-[10px] font-extrabold text-muted-foreground">{initials(project.project)}</div><div className="min-w-0"><p className="truncate text-sm font-extrabold">{project.project}</p><p className="mt-0.5 truncate text-[10px] font-mono-ui text-muted-foreground">{project.projectId}</p></div></div><ArrowUpRight size={15} className="shrink-0 text-muted-foreground transition group-hover:text-foreground" /></div>
-    <div className="mt-4 flex flex-wrap items-center gap-2"><StatusPill value={project.lifecycleStage} stage /><StatusPill value={project.status} /></div>
-    {!compact && <><div className="mt-5 flex items-end justify-between"><div><p className="eyebrow text-muted-foreground">Level</p><p className="mt-1 text-sm font-extrabold">{project.levelPercent}%</p></div><p className="text-[10px] text-muted-foreground">{relativeDate(project.lastActivity)}</p></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-foreground transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} /></div><p className="mt-3 line-clamp-1 text-xs text-muted-foreground">{project.exactNextAction || project.currentGate || 'No next action recorded'}</p></>}
+    <div className="mt-4"><p className="eyebrow text-muted-foreground">Current Stage</p><div className="mt-2 flex flex-wrap items-center gap-2"><StatusPill value={project.lifecycleStage} stage /><StatusPill value={project.status} /></div></div>
+    {!compact && <><div className="mt-5 flex items-end justify-between"><div><p className="eyebrow text-muted-foreground">Overall Project Progress</p><p className="mt-1 text-sm font-extrabold">{project.levelPercent}%</p></div><p className="text-[10px] text-muted-foreground">{relativeDate(project.lastActivity)}</p></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-foreground transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} /></div><p className="mt-3 line-clamp-1 text-xs text-muted-foreground">{project.exactNextAction || project.currentGate || 'No next action recorded'}</p></>}
   </Link>;
 }
 
@@ -36,10 +36,9 @@ export function FamilyProjectCard({ project }: { project: Project }) {
       </div>
       <ArrowUpRight size={15} className="shrink-0 text-muted-foreground transition group-hover:text-foreground" />
     </div>
-    <div className="mt-4 flex flex-wrap items-center gap-2">
-      <StatusPill value={project.lifecycleStage} stage />
-      <StatusPill value={project.status} />
-      <span className="rounded-full bg-secondary px-2.5 py-1 text-[10px] font-bold text-muted-foreground">{project.levelPercent}%</span>
+    <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+      <div><p className="eyebrow text-muted-foreground">Current Stage</p><div className="mt-2 flex flex-wrap items-center gap-2"><StatusPill value={project.lifecycleStage} stage /><StatusPill value={project.status} /></div></div>
+      <div className="sm:text-right"><p className="eyebrow text-muted-foreground">Overall Project Progress</p><p className="mt-1 text-sm font-extrabold">{project.levelPercent}%</p></div>
     </div>
     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-secondary">
       <div className="h-full rounded-full bg-foreground transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} />
