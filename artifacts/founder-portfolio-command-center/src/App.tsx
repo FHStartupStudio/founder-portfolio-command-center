@@ -4,6 +4,16 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
+import Dashboard from '@/pages/dashboard';
+import Portfolio from '@/pages/portfolio';
+import Projects from '@/pages/projects';
+import ProjectDetail from '@/pages/project-detail';
+import Waiting from '@/pages/waiting';
+import BetaLaunch from '@/pages/beta-launch';
+import ChangeLog from '@/pages/change-log';
+import { AppShell } from '@/components/shell';
+import { PortfolioProvider } from '@/lib/portfolio-context';
+import { usePortfolioData } from '@/hooks/use-portfolio-data';
 import {
   Route,
   Switch,
@@ -13,31 +23,32 @@ import {
 
 const queryClient = new QueryClient();
 
-function Home() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Replit Agent is building...
-        </h1>
-        <p className="mt-2 text-sm text-gray-600">
-          Your app will appear here once it's ready.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 function Router() {
+  const portfolio = usePortfolioData();
+  const value = {
+    snapshot: portfolio.data,
+    loading: portfolio.isLoading,
+    error: portfolio.isError,
+    refreshing: portfolio.isFetching,
+    refresh: () => { void portfolio.refetch(); },
+  };
   return (
-    // Keep a shared shell (sidebar, navbar) outside the boundary so it
-    // survives a page crash.
-    <RoutedErrorBoundary>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route component={NotFound} />
-      </Switch>
-    </RoutedErrorBoundary>
+    <PortfolioProvider value={value}>
+      <AppShell snapshot={portfolio.data} refreshing={portfolio.isFetching} onRefresh={value.refresh}>
+        <RoutedErrorBoundary>
+          <Switch>
+            <Route path="/" component={Dashboard} />
+            <Route path="/portfolio" component={Portfolio} />
+            <Route path="/projects" component={Projects} />
+            <Route path="/projects/:projectId" component={ProjectDetail} />
+            <Route path="/waiting" component={Waiting} />
+            <Route path="/beta-launch" component={BetaLaunch} />
+            <Route path="/change-log" component={ChangeLog} />
+            <Route component={NotFound} />
+          </Switch>
+        </RoutedErrorBoundary>
+      </AppShell>
+    </PortfolioProvider>
   );
 }
 

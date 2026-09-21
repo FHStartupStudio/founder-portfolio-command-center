@@ -1,23 +1,5 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import { Link } from 'wouter';
 
 export default function NotFound() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              404 Page Not Found
-            </h1>
-          </div>
-
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  return <div className="grid min-h-[70dvh] place-items-center"><div className="text-center"><p className="eyebrow text-muted-foreground">404 / off-grid</p><h1 className="mt-3 text-5xl font-extrabold tracking-[-.06em]">That view does not exist.</h1><p className="mx-auto mt-3 max-w-md text-sm leading-6 text-muted-foreground">The portfolio map has no route for this location.</p><Link href="/" className="focus-ring mt-6 inline-flex rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground" data-testid="link-back-command-center">Return to command center</Link></div></div>;
 }
