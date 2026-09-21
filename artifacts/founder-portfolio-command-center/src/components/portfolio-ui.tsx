@@ -6,7 +6,7 @@ import { initials, relativeDate, stageTone, statusTone } from '@/lib/portfolio';
 
 export function StatusPill({ value, stage = false }: { value: string; stage?: boolean }) {
   const tone = stage ? stageTone(value) : statusTone(value);
-  const styles = { amber: 'bg-amber-100 text-amber-800 border-amber-200', teal: 'bg-teal-100 text-teal-800 border-teal-200', green: 'bg-emerald-100 text-emerald-800 border-emerald-200', slate: 'bg-secondary text-muted-foreground border-border' };
+  const styles = { amber: 'bg-amber-950/50 text-amber-200 border-amber-800/60', teal: 'bg-teal-950/50 text-teal-200 border-teal-800/60', green: 'bg-emerald-950/50 text-emerald-200 border-emerald-800/60', slate: 'bg-secondary text-muted-foreground border-border' };
   return <span className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold ${styles[tone]}`} data-testid={`status-${value.toLowerCase().replaceAll(' ', '-')}`}><span className="size-1.5 rounded-full bg-current opacity-70" />{value || 'Unspecified'}</span>;
 }
 
@@ -15,20 +15,20 @@ export function SectionHeading({ eyebrow, title, description, action }: { eyebro
 }
 
 export function StatCard({ label, value, detail, accent = 'default' }: { label: string; value: string | number; detail: string; accent?: 'default' | 'amber' | 'teal' | 'red' }) {
-  const bar = { default: 'bg-foreground', amber: 'bg-accent', teal: 'bg-teal-600', red: 'bg-red-600' }[accent];
-  return <div className="panel relative overflow-hidden rounded-2xl p-5" data-testid={`stat-${label.toLowerCase().replaceAll(' ', '-')}`}><div className={`absolute inset-y-0 left-0 w-1 ${bar}`} /><p className="eyebrow text-muted-foreground">{label}</p><p className="metric-number mt-3 text-3xl font-extrabold">{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></div>;
+  const bar = { default: 'bg-primary', amber: 'bg-amber-400', teal: 'bg-teal-400', red: 'bg-red-400' }[accent];
+  return <div className="panel relative overflow-hidden rounded-xl p-5" data-testid={`stat-${label.toLowerCase().replaceAll(' ', '-')}`}><div className={`absolute inset-y-0 left-0 w-1 ${bar}`} /><p className="eyebrow text-muted-foreground">{label}</p><p className="metric-number mt-3 text-3xl font-extrabold">{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></div>;
 }
 
 export function ProjectCard({ project, compact = false }: { project: Project; compact?: boolean }) {
-  return <Link href={`/projects/${encodeURIComponent(project.projectId)}`} className={`panel focus-ring group block rounded-2xl transition hover:-translate-y-0.5 hover:border-foreground/25 ${compact ? 'p-4' : 'p-5'}`} data-testid={`card-project-${project.projectId}`}>
+  return <Link href={`/projects/${encodeURIComponent(project.projectId)}`} className={`panel focus-ring group block rounded-xl transition hover:-translate-y-0.5 hover:border-primary/60 ${compact ? 'p-4' : 'p-5'}`} data-testid={`card-project-${project.projectId}`}>
     <div className="flex items-start justify-between gap-3"><div className="flex min-w-0 items-center gap-3"><div className="grid size-9 shrink-0 place-items-center rounded-xl bg-secondary text-[10px] font-extrabold text-muted-foreground">{initials(project.project)}</div><div className="min-w-0"><p className="truncate text-sm font-extrabold">{project.project}</p><p className="mt-0.5 truncate text-[10px] font-mono-ui text-muted-foreground">{project.projectId}</p></div></div><ArrowUpRight size={15} className="shrink-0 text-muted-foreground transition group-hover:text-foreground" /></div>
     <div className="mt-4"><p className="eyebrow text-muted-foreground">Current Stage</p><div className="mt-2 flex flex-wrap items-center gap-2"><StatusPill value={project.lifecycleStage} stage /><StatusPill value={project.status} /></div></div>
-    {!compact && <><div className="mt-5 flex items-end justify-between"><div><p className="eyebrow text-muted-foreground">Overall Project Progress</p><p className="mt-1 text-sm font-extrabold">{project.levelPercent}%</p></div><p className="text-[10px] text-muted-foreground">{relativeDate(project.lastActivity)}</p></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary"><div className="h-full rounded-full bg-foreground transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} /></div><p className="mt-3 line-clamp-1 text-xs text-muted-foreground">{project.exactNextAction || project.currentGate || 'No next action recorded'}</p></>}
+    {!compact && <><div className="mt-5 flex items-end justify-between"><div><p className="eyebrow text-muted-foreground">Overall Project Progress</p><p className="mt-1 text-sm font-extrabold">{project.levelPercent}%</p></div><p className="text-[10px] text-muted-foreground">{relativeDate(project.lastActivity)}</p></div><div className="progress-track mt-2 h-1.5 overflow-hidden rounded-full"><div className="progress-fill h-full rounded-full transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} /></div><p className="mt-3 line-clamp-1 text-xs text-muted-foreground">{project.exactNextAction || project.currentGate || 'No next action recorded'}</p></>}
   </Link>;
 }
 
 export function FamilyProjectCard({ project }: { project: Project }) {
-  return <Link href={`/projects/${encodeURIComponent(project.projectId)}`} className="panel focus-ring group block rounded-2xl p-5 transition hover:-translate-y-0.5 hover:border-foreground/25" data-testid={`family-project-${project.projectId}`}>
+  return <Link href={`/projects/${encodeURIComponent(project.projectId)}`} className="panel focus-ring group block rounded-xl p-5 transition hover:-translate-y-0.5 hover:border-primary/60" data-testid={`family-project-${project.projectId}`}>
     <div className="flex items-start justify-between gap-3">
       <div className="min-w-0">
         <p className="truncate text-sm font-extrabold">{project.project}</p>
@@ -40,17 +40,17 @@ export function FamilyProjectCard({ project }: { project: Project }) {
       <div><p className="eyebrow text-muted-foreground">Current Stage</p><div className="mt-2 flex flex-wrap items-center gap-2"><StatusPill value={project.lifecycleStage} stage /><StatusPill value={project.status} /></div></div>
       <div className="sm:text-right"><p className="eyebrow text-muted-foreground">Overall Project Progress</p><p className="mt-1 text-sm font-extrabold">{project.levelPercent}%</p></div>
     </div>
-    <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-secondary">
-      <div className="h-full rounded-full bg-foreground transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} />
+    <div className="progress-track mt-4 h-1.5 overflow-hidden rounded-full">
+      <div className="progress-fill h-full rounded-full transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} />
     </div>
     <dl className="mt-4 space-y-3 text-xs">
       <div>
         <dt className="eyebrow text-muted-foreground">Current gate</dt>
         <dd className="mt-1 leading-5">{project.currentGate || 'Not recorded'}</dd>
       </div>
-      {project.blocker && <div>
+       {project.blocker && <div>
         <dt className="eyebrow text-muted-foreground">Blocker</dt>
-        <dd className="mt-1 leading-5 text-amber-800">{project.blocker}</dd>
+         <dd className="mt-1 leading-5 text-amber-200">{project.blocker}</dd>
       </div>}
       <div>
         <dt className="eyebrow text-muted-foreground">Exact next action</dt>

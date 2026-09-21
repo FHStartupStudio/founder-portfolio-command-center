@@ -27,7 +27,7 @@ export function AppShell({ children, snapshot, refreshing, onRefresh }: ShellPro
         <div className="flex h-20 items-center justify-between border-b border-sidebar-border px-6">
           <Link href="/" className="focus-ring flex items-center gap-3" data-testid="link-brand">
             <span className="grid size-9 place-items-center rounded-xl bg-sidebar-primary text-sm font-extrabold text-sidebar-primary-foreground">FP</span>
-            <span><span className="block text-sm font-extrabold tracking-tight">Founder Portfolio</span><span className="eyebrow mt-1 block text-sidebar-foreground/55">Command center</span></span>
+            <span><span className="block text-sm font-extrabold tracking-tight">Founder OS</span><span className="eyebrow mt-1 block text-sidebar-foreground/55">Portfolio command center</span></span>
           </Link>
           <button className="focus-ring rounded-md p-1.5 text-sidebar-foreground/55 hover:bg-sidebar-accent lg:hidden" onClick={() => setMobileOpen(false)} data-testid="button-close-mobile-nav" aria-label="Close navigation"><X size={17} /></button>
         </div>
@@ -49,14 +49,14 @@ export function AppShell({ children, snapshot, refreshing, onRefresh }: ShellPro
             <p className="mt-2 text-xs font-semibold">{live ? 'Live tracker' : 'Sample mode'}</p>
             <p className="mt-1 text-[10px] leading-4 text-sidebar-foreground/45">{snapshot?.syncedAt ? `Synced ${formatDate(snapshot.syncedAt, true)}` : 'Waiting for first sync'}</p>
           </div>
-          <div className="flex items-center gap-3"><div className="grid size-8 place-items-center rounded-full bg-sidebar-primary text-[11px] font-extrabold text-sidebar-primary-foreground">JR</div><div><p className="text-xs font-bold">Founder view</p><p className="text-[10px] text-sidebar-foreground/45">Private workspace</p></div></div>
+          <div className="flex items-center gap-3"><div className="grid size-8 place-items-center rounded-full bg-sidebar-primary text-[11px] font-extrabold text-sidebar-primary-foreground">FO</div><div><p className="text-xs font-bold">Founder view</p><p className="text-[10px] text-sidebar-foreground/45">Internal Workspace</p></div></div>
         </div>
       </aside>
 
       {mobileOpen && <button className="fixed inset-0 z-30 bg-sidebar/45 lg:hidden" onClick={() => setMobileOpen(false)} data-testid="button-dismiss-mobile-nav" aria-label="Dismiss navigation" />}
       <div className="lg:pl-[268px]">
         <header className="sticky top-0 z-20 flex h-[72px] items-center justify-between border-b border-border bg-background/90 px-4 backdrop-blur-md sm:px-8">
-          <div className="flex items-center gap-3"><button className="focus-ring rounded-lg border border-border bg-card p-2 lg:hidden" onClick={() => setMobileOpen(true)} data-testid="button-open-mobile-nav" aria-label="Open navigation"><Menu size={17} /></button><div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><span className="font-mono-ui text-[11px]">PRIVATE / FOUNDER OS</span><ChevronRight size={13} /><span className="font-semibold text-foreground">{navItems.find((item) => item.href === '/' ? location === '/' : location.startsWith(item.href))?.label || 'Workspace'}</span></div></div>
+           <div className="flex items-center gap-3"><button className="focus-ring rounded-lg border border-border bg-card p-2 lg:hidden" onClick={() => setMobileOpen(true)} data-testid="button-open-mobile-nav" aria-label="Open navigation"><Menu size={17} /></button><div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><span className="font-mono-ui text-[11px]">FOUNDER OS</span><ChevronRight size={13} /><span className="font-semibold text-foreground">{navItems.find((item) => item.href === '/' ? location === '/' : location.startsWith(item.href))?.label || 'Workspace'}</span></div></div>
           <div className="flex items-center gap-2 sm:gap-4">
             <label className="relative hidden md:block"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={15} /><input className="focus-ring h-9 w-48 rounded-lg border border-border bg-card pl-9 pr-3 text-xs outline-none placeholder:text-muted-foreground/70" placeholder="Search projects..." data-testid="input-global-search" /></label>
             <div className="hidden items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 sm:flex"><span className={`size-1.5 rounded-full ${live ? 'bg-emerald-500' : 'bg-accent'}`} /><span className="font-mono-ui text-[10px] font-medium">{live ? 'LIVE DATA' : 'SAMPLE MODE'}</span></div>
