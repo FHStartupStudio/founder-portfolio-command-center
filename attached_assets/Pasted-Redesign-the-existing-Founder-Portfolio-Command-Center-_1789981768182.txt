@@ -1,0 +1,153 @@
+Redesign the existing Founder Portfolio Command Center UI.
+
+IMPORTANT:
+This is a VISUAL/UI redesign only.
+Do NOT rebuild the application.
+Do NOT change the Google Sheets integration.
+Do NOT change the live-data architecture.
+Do NOT hardcode project data.
+Do NOT change project stages, progress percentages, gates, blockers, next actions, family assignments, or any existing tracker data.
+Do NOT break existing family or project drill-down navigation.
+Keep the Refresh/live-data behavior working exactly as it does now.
+
+The Google Sheet remains the source of truth.
+
+DESIGN DIRECTION
+
+Change the entire application to a polished DARK founder operating-system dashboard.
+
+Overall look:
+- Near-black / deep navy background
+- Slightly lighter dark cards and panels
+- White primary text
+- Muted gray secondary text
+- Subtle borders
+- Restrained blue/purple/teal accent colors
+- Progress bars should be easy to read against the dark background
+- Status colors can remain semantic: green for ready/active, amber for waiting/gated, muted gray for parked, etc.
+- Modern, sophisticated, high-density dashboard
+- Avoid excessive gradients, oversized empty spaces, or decorative effects
+- Desktop-first but remain responsive
+
+BRANDING / COPY
+
+Keep:
+Founder OS
+
+Replace the current hero copy:
+“Build the right thing.
+At the right gate.”
+
+with:
+
+“Portfolio Command Center”
+
+Subtitle:
+“Build. Verify. Ship.”
+
+Supporting text:
+“53 projects across products, directories, education, public-benefit technology, marketplaces, and experimental work.”
+
+Do not use motivational quotes.
+
+TOP NAVIGATION
+
+Create a compact top navigation/header:
+Founder OS
+Command Center
+Portfolio
+
+Keep the LIVE DATA indicator and Refresh control clearly visible.
+
+Do not display “PRIVATE” as though it represents an actual security control. If useful, use the descriptive label:
+“Internal Workspace”
+
+DASHBOARD SUMMARY
+
+The dashboard should prominently show:
+- Total Projects
+- Needs Attention
+- In Beta / Launch Orbit
+- Active Platforms
+
+Use the real calculated values from live Google Sheet data.
+
+Add a portfolio-family overview underneath using the existing live family data.
+
+Do NOT invent category counts.
+
+PORTFOLIO VIEW
+
+Make the main portfolio much easier to scan.
+
+Provide:
+- Search
+- Family/category filter
+- Status filter
+- Stage filter
+- Table/Card view toggle if practical
+
+For the desktop table view, use columns:
+
+Project
+Portfolio Family
+Current Stage
+Overall Project Progress
+Current Gate
+Status
+Last Updated
+
+Each row should open the existing project detail view.
+
+FAMILY VIEW
+
+Preserve the existing family drill-down.
+
+Family cards should show:
+- Family name
+- Number of projects
+- Average Overall Project Progress
+- Stage/status summary
+
+Opening a family must continue to show every assigned project.
+
+PROJECT DETAIL
+
+Preserve all existing project information, including:
+- Current Stage
+- Overall Project Progress
+- Status
+- Latest Completed Gate
+- Current Gate
+- Blocker
+- Exact Next Action
+- Do Not Redo
+- Technical Stack / Product Type
+- Current Work Platform
+- Beta Status
+- Launch Status
+- Evidence / Checkpoint
+- Last Activity
+- Last Tracker Update
+
+Make “Current Gate” and “Exact Next Action” especially easy to identify.
+
+DATA SAFETY
+
+Do not modify the underlying Google Sheet while performing this redesign.
+Do not alter any project records.
+Do not change calculations solely to make the UI look better.
+Do not create sample/demo projects.
+
+The current live dataset is authoritative.
+
+After implementation:
+1. Verify LIVE DATA still works.
+2. Verify Refresh still pulls Google Sheet changes.
+3. Verify family drill-down works.
+4. Verify project detail navigation works.
+5. Verify all existing tracked projects still load.
+6. Report exactly which UI components/files you changed.
+7. Report any functionality you intentionally left unchanged.
+
+Do not make unrelated changes.
