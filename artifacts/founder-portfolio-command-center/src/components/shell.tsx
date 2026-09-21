@@ -45,7 +45,7 @@ export function AppShell({ children, snapshot, refreshing, onRefresh }: ShellPro
         </nav>
         <div className="border-t border-sidebar-border px-5 py-5">
           <div className="mb-4 rounded-xl border border-sidebar-border bg-sidebar-accent/45 p-3">
-            <div className="flex items-center justify-between"><span className="eyebrow text-sidebar-foreground/45">Data source</span><span className={`size-1.5 rounded-full ${live ? 'bg-emerald-400' : 'bg-sidebar-primary'}`} /></div>
+            <div className="flex items-center justify-between"><span className="eyebrow text-sidebar-foreground/45">Data source</span><span className="size-1.5 rounded-full bg-primary" /></div>
             <p className="mt-2 text-xs font-semibold">{live ? 'Live tracker' : 'Sample mode'}</p>
             <p className="mt-1 text-[10px] leading-4 text-sidebar-foreground/45">{snapshot?.syncedAt ? `Synced ${formatDate(snapshot.syncedAt, true)}` : 'Waiting for first sync'}</p>
           </div>
@@ -59,7 +59,7 @@ export function AppShell({ children, snapshot, refreshing, onRefresh }: ShellPro
            <div className="flex items-center gap-3"><button className="focus-ring rounded-lg border border-border bg-card p-2 lg:hidden" onClick={() => setMobileOpen(true)} data-testid="button-open-mobile-nav" aria-label="Open navigation"><Menu size={17} /></button><div className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><span className="font-mono-ui text-[11px]">FOUNDER OS</span><ChevronRight size={13} /><span className="font-semibold text-foreground">{navItems.find((item) => item.href === '/' ? location === '/' : location.startsWith(item.href))?.label || 'Workspace'}</span></div></div>
           <div className="flex items-center gap-2 sm:gap-4">
             <label className="relative hidden md:block"><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={15} /><input className="focus-ring h-9 w-48 rounded-lg border border-border bg-card pl-9 pr-3 text-xs outline-none placeholder:text-muted-foreground/70" placeholder="Search projects..." data-testid="input-global-search" /></label>
-            <div className="hidden items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 sm:flex"><span className={`size-1.5 rounded-full ${live ? 'bg-emerald-500' : 'bg-accent'}`} /><span className="font-mono-ui text-[10px] font-medium">{live ? 'LIVE DATA' : 'SAMPLE MODE'}</span></div>
+            <div className="hidden items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 sm:flex"><span className="size-1.5 rounded-full bg-primary" /><span className="font-mono-ui text-[10px] font-medium">{live ? 'LIVE DATA' : 'SAMPLE MODE'}</span></div>
             <button className="focus-ring inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3 text-xs font-bold transition hover:border-foreground/30 disabled:opacity-50" onClick={onRefresh} disabled={refreshing} data-testid="button-refresh"><RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} /><span className="hidden sm:inline">{refreshing ? 'Syncing' : 'Refresh'}</span></button>
           </div>
         </header>

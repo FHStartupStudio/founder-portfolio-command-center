@@ -2,12 +2,11 @@ import { ArrowUpRight, Check, LockKeyhole, TriangleAlert } from 'lucide-react';
 import { Link } from 'wouter';
 import type { Project } from '@workspace/api-client-react';
 import type { ReactNode } from 'react';
-import { initials, relativeDate, stageTone, statusTone } from '@/lib/portfolio';
+import { initials, relativeDate } from '@/lib/portfolio';
 
 export function StatusPill({ value, stage = false }: { value: string; stage?: boolean }) {
-  const tone = stage ? stageTone(value) : statusTone(value);
-  const styles = { amber: 'bg-amber-950/50 text-amber-200 border-amber-800/60', teal: 'bg-teal-950/50 text-teal-200 border-teal-800/60', green: 'bg-emerald-950/50 text-emerald-200 border-emerald-800/60', slate: 'bg-secondary text-muted-foreground border-border' };
-  return <span className={`inline-flex max-w-full items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold ${styles[tone]}`} data-testid={`status-${value.toLowerCase().replaceAll(' ', '-')}`}><span className="size-1.5 rounded-full bg-current opacity-70" />{value || 'Unspecified'}</span>;
+  void stage;
+  return <span className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1 text-[10px] font-bold text-primary" data-testid={`status-${value.toLowerCase().replaceAll(' ', '-')}`}><span className="size-1.5 rounded-full bg-current opacity-70" />{value || 'Unspecified'}</span>;
 }
 
 export function SectionHeading({ eyebrow, title, description, action }: { eyebrow: string; title: string; description?: string; action?: ReactNode }) {
@@ -15,8 +14,8 @@ export function SectionHeading({ eyebrow, title, description, action }: { eyebro
 }
 
 export function StatCard({ label, value, detail, accent = 'default' }: { label: string; value: string | number; detail: string; accent?: 'default' | 'amber' | 'teal' | 'red' }) {
-  const bar = { default: 'bg-primary', amber: 'bg-amber-400', teal: 'bg-teal-400', red: 'bg-red-400' }[accent];
-  return <div className="panel relative overflow-hidden rounded-xl p-5" data-testid={`stat-${label.toLowerCase().replaceAll(' ', '-')}`}><div className={`absolute inset-y-0 left-0 w-1 ${bar}`} /><p className="eyebrow text-muted-foreground">{label}</p><p className="metric-number mt-3 text-3xl font-extrabold">{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></div>;
+  void accent;
+  return <div className="panel relative overflow-hidden rounded-xl p-5" data-testid={`stat-${label.toLowerCase().replaceAll(' ', '-')}`}><div className="absolute inset-y-0 left-0 w-1 bg-primary" /><p className="eyebrow text-muted-foreground">{label}</p><p className="metric-number mt-3 text-3xl font-extrabold">{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></div>;
 }
 
 export function ProjectCard({ project, compact = false }: { project: Project; compact?: boolean }) {
@@ -50,7 +49,7 @@ export function FamilyProjectCard({ project }: { project: Project }) {
       </div>
        {project.blocker && <div>
         <dt className="eyebrow text-muted-foreground">Blocker</dt>
-         <dd className="mt-1 leading-5 text-amber-200">{project.blocker}</dd>
+       <dd className="mt-1 leading-5 text-muted-foreground">{project.blocker}</dd>
       </div>}
       <div>
         <dt className="eyebrow text-muted-foreground">Exact next action</dt>
@@ -65,7 +64,7 @@ export function EmptyState({ title, description }: { title: string; description:
 }
 
 export function ErrorState({ onRetry }: { onRetry: () => void }) {
-  return <div className="panel flex min-h-48 flex-col items-center justify-center rounded-2xl p-8 text-center"><div className="grid size-10 place-items-center rounded-xl bg-red-100 text-red-700"><TriangleAlert size={17} /></div><h3 className="mt-4 text-sm font-extrabold">Portfolio sync unavailable</h3><p className="mt-1 max-w-sm text-xs leading-5 text-muted-foreground">The tracker could not be reached. Try the sync again before making a decision.</p><button className="focus-ring mt-4 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground" onClick={onRetry} data-testid="button-retry">Try again</button></div>;
+  return <div className="panel flex min-h-48 flex-col items-center justify-center rounded-2xl p-8 text-center"><div className="grid size-10 place-items-center rounded-xl bg-primary/10 text-primary"><TriangleAlert size={17} /></div><h3 className="mt-4 text-sm font-extrabold">Portfolio sync unavailable</h3><p className="mt-1 max-w-sm text-xs leading-5 text-muted-foreground">The tracker could not be reached. Try the sync again before making a decision.</p><button className="focus-ring mt-4 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground" onClick={onRetry} data-testid="button-retry">Try again</button></div>;
 }
 
 export function LoadingState() {
