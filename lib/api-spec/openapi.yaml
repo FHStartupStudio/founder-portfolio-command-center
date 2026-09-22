@@ -78,6 +78,7 @@ components:
         - projectId
         - project
         - portfolioFamily
+        - tagsSecondaryFamilies
         - category
         - lifecycleStage
         - levelPercent
@@ -99,6 +100,7 @@ components:
         projectId: { type: string }
         project: { type: string }
         portfolioFamily: { type: string }
+        tagsSecondaryFamilies: { type: string }
         chatGptProjectName: { type: string }
         category: { type: string }
         lifecycleStage: { type: string }
