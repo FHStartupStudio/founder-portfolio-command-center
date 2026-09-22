@@ -2,7 +2,7 @@ import { ArrowUpRight, Check, LockKeyhole, TriangleAlert } from 'lucide-react';
 import { Link } from 'wouter';
 import type { Project } from '@workspace/api-client-react';
 import type { ReactNode } from 'react';
-import { initials, relativeDate } from '@/lib/portfolio';
+import { initials, relativeDate, secondaryFamilyTags } from '@/lib/portfolio';
 
 export function StatusPill({ value, stage = false }: { value: string; stage?: boolean }) {
   void stage;
@@ -18,9 +18,14 @@ export function StatCard({ label, value, detail, accent = 'default' }: { label: 
   return <div className="panel relative overflow-hidden rounded-xl p-5" data-testid={`stat-${label.toLowerCase().replaceAll(' ', '-')}`}><div className="absolute inset-y-0 left-0 w-1 bg-primary" /><p className="eyebrow text-muted-foreground">{label}</p><p className="metric-number mt-3 text-3xl font-extrabold">{value}</p><p className="mt-1 text-xs text-muted-foreground">{detail}</p></div>;
 }
 
+export function FamilyTagChips({ project, className = '' }: { project: Project; className?: string }) {
+  const tags = Array.from(new Set([project.portfolioFamily, ...secondaryFamilyTags(project.tagsSecondaryFamilies)].filter(Boolean)));
+  return <div className={`flex flex-wrap gap-1.5 ${className}`} aria-label="Portfolio family tags">{tags.map((tag) => <span className="rounded-full border border-border bg-secondary/70 px-2 py-0.5 text-[9px] font-medium leading-4 text-muted-foreground" key={tag}>{tag}</span>)}</div>;
+}
+
 export function ProjectCard({ project, compact = false }: { project: Project; compact?: boolean }) {
   return <Link href={`/projects/${encodeURIComponent(project.projectId)}`} className={`panel focus-ring group block rounded-xl transition hover:-translate-y-0.5 hover:border-primary/60 ${compact ? 'p-4' : 'p-5'}`} data-testid={`card-project-${project.projectId}`}>
-    <div className="flex items-start justify-between gap-3"><div className="flex min-w-0 items-center gap-3"><div className="grid size-9 shrink-0 place-items-center rounded-xl bg-secondary text-[10px] font-extrabold text-muted-foreground">{initials(project.project)}</div><div className="min-w-0"><p className="truncate text-sm font-extrabold">{project.project}</p><p className="mt-0.5 truncate text-[10px] font-mono-ui text-muted-foreground">{project.projectId}</p></div></div><ArrowUpRight size={15} className="shrink-0 text-muted-foreground transition group-hover:text-foreground" /></div>
+    <div className="flex items-start justify-between gap-3"><div className="flex min-w-0 items-center gap-3"><div className="grid size-9 shrink-0 place-items-center rounded-xl bg-secondary text-[10px] font-extrabold text-muted-foreground">{initials(project.project)}</div><div className="min-w-0"><p className="truncate text-sm font-extrabold">{project.project}</p><FamilyTagChips project={project} className="mt-1.5" /><p className="mt-1 truncate text-[10px] font-mono-ui text-muted-foreground">{project.projectId}</p></div></div><ArrowUpRight size={15} className="shrink-0 text-muted-foreground transition group-hover:text-foreground" /></div>
     <div className="mt-4"><p className="eyebrow text-muted-foreground">Current Stage</p><div className="mt-2 flex flex-wrap items-center gap-2"><StatusPill value={project.lifecycleStage} stage /><StatusPill value={project.status} /></div></div>
     {!compact && <><div className="mt-5 flex items-end justify-between"><div><p className="eyebrow text-muted-foreground">Overall Project Progress</p><p className="mt-1 text-sm font-extrabold">{project.levelPercent}%</p></div><p className="text-[10px] text-muted-foreground">{relativeDate(project.lastActivity)}</p></div><div className="progress-track mt-2 h-1.5 overflow-hidden rounded-full"><div className="progress-fill h-full rounded-full transition-all" style={{ width: `${Math.min(100, project.levelPercent)}%` }} /></div><p className="mt-3 line-clamp-1 text-xs text-muted-foreground">{project.exactNextAction || project.currentGate || 'No next action recorded'}</p></>}
   </Link>;
@@ -31,6 +36,7 @@ export function FamilyProjectCard({ project }: { project: Project }) {
     <div className="flex items-start justify-between gap-3">
       <div className="min-w-0">
         <p className="truncate text-sm font-extrabold">{project.project}</p>
+        <FamilyTagChips project={project} className="mt-1.5" />
         <p className="mt-1 text-xs text-muted-foreground">{project.category || 'Category not recorded'}</p>
       </div>
       <ArrowUpRight size={15} className="shrink-0 text-muted-foreground transition group-hover:text-foreground" />
