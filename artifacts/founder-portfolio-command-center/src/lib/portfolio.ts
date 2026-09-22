@@ -31,6 +31,10 @@ export function uniqueValues(projects: Project[], key: keyof Project) {
   return Array.from(new Set(projects.map((project) => String(project[key] || '')).filter(Boolean))).sort();
 }
 
+export function secondaryFamilyTags(value: string | undefined) {
+  return Array.from(new Set((value || '').split(',').map((tag) => tag.trim()).filter(Boolean))).sort();
+}
+
 export function groupBy<T>(items: T[], key: (item: T) => string) {
   return items.reduce<Record<string, T[]>>((groups, item) => {
     const group = key(item) || 'Unassigned';

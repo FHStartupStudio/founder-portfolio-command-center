@@ -13,6 +13,7 @@ export interface Project {
   projectId: string;
   project: string;
   portfolioFamily: string;
+  tagsSecondaryFamilies: string;
   chatGptProjectName?: string;
   category: string;
   lifecycleStage: string;
