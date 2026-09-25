@@ -153,7 +153,8 @@ export default function Assistant() {
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="eyebrow text-primary">Workspace / Read-only</p>
-          <h1 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl" data-testid="text-assistant-title">Portfolio Assistant</h1>
+          <h1 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl" data-testid="text-assistant-title">Scout</h1>
+          <p className="mt-1 text-sm font-semibold text-foreground/75">Founder Portfolio Assistant</p>
           <p className="mt-2 max-w-2xl text-xs leading-5 text-muted-foreground">Ask about gates, blockers, readiness, and next actions in the current portfolio. Answers are grounded in the Command Center data.</p>
         </div>
         <div className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 font-mono-ui text-[10px] text-muted-foreground" data-testid="status-assistant-source"><ShieldCheck size={14} className="text-primary" />{snapshot?.mode === 'SAMPLE MODE' ? 'SAMPLE MODE' : snapshot?.mode === 'LIVE DATA' ? 'LIVE DATA' : 'PORTFOLIO DATA'} · READ ONLY</div>
@@ -166,7 +167,7 @@ export default function Assistant() {
           <section className="panel overflow-hidden rounded-xl" aria-label="Ask a question">
             <div className="flex items-center gap-3 border-b border-border px-4 py-3 sm:px-5">
               <span className="grid size-8 place-items-center rounded-lg bg-primary/10 text-primary"><MessageSquareText size={16} /></span>
-              <div><h2 className="text-xs font-extrabold">Ask the portfolio</h2><p className="mt-0.5 text-[10px] text-muted-foreground">One question at a time · current Sheet-backed data</p></div>
+              <div><h2 className="text-xs font-extrabold">Ask Scout</h2><p className="mt-0.5 text-[10px] text-muted-foreground">One question at a time · current Sheet-backed data</p></div>
             </div>
             <form onSubmit={handleSubmit} className="p-4 sm:p-5" data-testid="form-assistant-question">
               <label htmlFor="portfolio-question" className="eyebrow mb-2 block text-muted-foreground">Your question</label>
@@ -201,14 +202,14 @@ export default function Assistant() {
             {requestError && (
               <div className="panel flex items-start gap-3 rounded-xl p-5" role="alert" data-testid="error-assistant-answer">
                 <TriangleAlert size={17} className="mt-0.5 shrink-0 text-primary" />
-                <div><h2 className="text-sm font-extrabold">Answer unavailable</h2><p className="mt-1 text-xs leading-5 text-muted-foreground">The portfolio assistant could not answer right now. Your question was not saved or applied to any project.</p><button type="button" onClick={() => void ask(submittedQuestion)} className="focus-ring mt-3 inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-xs font-bold hover:border-primary/50" data-testid="button-retry-assistant">Try again <ArrowRight size={13} /></button></div>
+                <div><h2 className="text-sm font-extrabold">Answer unavailable</h2><p className="mt-1 text-xs leading-5 text-muted-foreground">Scout could not answer right now. Your question was not saved or applied to any project.</p><button type="button" onClick={() => void ask(submittedQuestion)} className="focus-ring mt-3 inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary px-3 py-2 text-xs font-bold hover:border-primary/50" data-testid="button-retry-assistant">Try again <ArrowRight size={13} /></button></div>
               </div>
             )}
             {answer && <AnswerPanel answer={answer} question={submittedQuestion} />}
             {!answer && !assistant.isPending && !requestError && (
               <div className="panel flex items-start gap-3 rounded-xl px-4 py-5 sm:px-5" data-testid="empty-assistant-answer">
                 <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-secondary text-muted-foreground"><Search size={16} /></span>
-                <div><h2 className="text-sm font-extrabold">Start with a question</h2><p className="mt-1 text-xs leading-5 text-muted-foreground">Choose a prompt or ask in your own words. The answer, matching projects, and source evidence will appear here.</p></div>
+                <div><h2 className="text-sm font-extrabold">Ask Scout a question</h2><p className="mt-1 text-xs leading-5 text-muted-foreground">Choose a prompt or ask Scout in your own words. The answer, matching projects, and source evidence will appear here.</p></div>
               </div>
             )}
           </div>
