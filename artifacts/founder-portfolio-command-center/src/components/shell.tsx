@@ -1,4 +1,4 @@
-import { Bell, ChevronRight, CircleHelp, LayoutDashboard, Menu, Network, RefreshCw, Search, SlidersHorizontal, X } from 'lucide-react';
+import { Bell, ChevronRight, CircleHelp, LayoutDashboard, Menu, MessageSquareText, Network, RefreshCw, Search, SlidersHorizontal, X } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
@@ -11,6 +11,7 @@ const navItems = [
   { href: '/', label: 'Command center', caption: 'Overview', icon: LayoutDashboard },
   { href: '/portfolio', label: 'Portfolio', caption: 'Families & systems', icon: Network },
   { href: '/projects', label: 'All projects', caption: 'Search & sort', icon: SlidersHorizontal },
+  { href: '/assistant', label: 'Portfolio Assistant', caption: 'Ask the portfolio', icon: MessageSquareText },
   { href: '/waiting', label: 'Waiting on gate', caption: 'Needs a decision', icon: CircleHelp },
   { href: '/beta-launch', label: 'Beta & launch', caption: 'Readiness board', icon: Bell },
   { href: '/change-log', label: 'Change log', caption: 'Recent movement', icon: RefreshCw },

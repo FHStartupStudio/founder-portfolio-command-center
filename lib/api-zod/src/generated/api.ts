@@ -46,7 +46,9 @@ export const GetPortfolioResponse = zod.object({
   "lastActivity": zod.string(),
   "lastTrackerUpdate": zod.string(),
   "evidenceCheckpoint": zod.string(),
-  "notes": zod.string()
+  "notes": zod.string(),
+  "googleDriveFolder": zod.string(),
+  "documentationStatus": zod.string()
 })),
   "changeLog": zod.array(zod.object({
   "timestamp": zod.string(),
@@ -58,6 +60,11 @@ export const GetPortfolioResponse = zod.object({
   "gateChange": zod.string(),
   "evidence": zod.string(),
   "updatedBy": zod.string()
+})),
+  "stageRules": zod.array(zod.object({
+  "lifecycleStage": zod.string(),
+  "levelPercent": zod.number(),
+  "gateRule": zod.string()
 })),
   "warning": zod.string().nullish()
 })
@@ -92,7 +99,43 @@ export const GetPortfolioProjectResponse = zod.object({
   "lastActivity": zod.string(),
   "lastTrackerUpdate": zod.string(),
   "evidenceCheckpoint": zod.string(),
-  "notes": zod.string()
+  "notes": zod.string(),
+  "googleDriveFolder": zod.string(),
+  "documentationStatus": zod.string()
+})
+
+
+/**
+ * Answers from the latest Google Sheet-backed portfolio snapshot without changing project data.
+ * @summary Ask the read-only portfolio assistant
+ */
+export const askPortfolioAssistantBodyQuestionMax = 2000;
+
+
+
+export const AskPortfolioAssistantBody = zod.object({
+  "question": zod.string().min(1).max(askPortfolioAssistantBodyQuestionMax)
+})
+
+export const AskPortfolioAssistantResponse = zod.object({
+  "answer": zod.string(),
+  "basis": zod.enum(['EXPLICIT SHEET DATA', 'DERIVED FROM SHEET DATA']),
+  "usedAiInterpretation": zod.boolean(),
+  "projects": zod.array(zod.object({
+  "projectId": zod.string(),
+  "project": zod.string(),
+  "portfolioFamily": zod.string(),
+  "tagsSecondaryFamilies": zod.string(),
+  "lifecycleStage": zod.string(),
+  "status": zod.string(),
+  "currentGate": zod.string(),
+  "blocker": zod.string(),
+  "exactNextAction": zod.string()
+})),
+  "evidence": zod.array(zod.object({
+  "label": zod.string(),
+  "value": zod.string()
+}))
 })
 
 

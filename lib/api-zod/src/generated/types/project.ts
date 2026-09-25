@@ -29,4 +29,6 @@ export interface Project {
   lastTrackerUpdate: string;
   evidenceCheckpoint: string;
   notes: string;
+  googleDriveFolder: string;
+  documentationStatus: string;
 }

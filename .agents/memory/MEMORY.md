@@ -1,0 +1,1 @@
+- [Portfolio assistant grounding](portfolio-assistant-grounding.md) — recognized portfolio queries stay deterministic; AI is reserved for ambiguous interpretation over retrieved Sheet context.

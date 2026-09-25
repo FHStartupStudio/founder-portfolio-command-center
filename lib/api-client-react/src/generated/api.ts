@@ -6,11 +6,15 @@
  * OpenAPI spec version: 0.1.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query';
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
@@ -18,12 +22,14 @@ import type {
 import type {
   ErrorResponse,
   HealthStatus,
+  PortfolioAssistantAnswer,
+  PortfolioAssistantInput,
   PortfolioSnapshot,
   Project
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
-import type { ErrorType } from '../custom-fetch';
+import type { ErrorType , BodyType } from '../custom-fetch';
 
 type AwaitedInput<T> = PromiseLike<T> | T;
 
@@ -281,4 +287,93 @@ export function useGetPortfolioProject<TData = Awaited<ReturnType<typeof getPort
 
 
 
+
+export const getAskPortfolioAssistantUrl = () => {
+
+
+
+
+  return `/api/portfolio/assistant`
+}
+
+/**
+ * Answers from the latest Google Sheet-backed portfolio snapshot without changing project data.
+ * @summary Ask the read-only portfolio assistant
+ */
+export const askPortfolioAssistant = async (portfolioAssistantInput: PortfolioAssistantInput, options?: Parameters<typeof customFetch>[1]): Promise<PortfolioAssistantAnswer> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return customFetch<PortfolioAssistantAnswer>(getAskPortfolioAssistantUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(portfolioAssistantInput)
+  }
+);}
+
+
+
+
+
+export const getAskPortfolioAssistantMutationKey = () => ['askPortfolioAssistant'] as const;
+
+export const getAskPortfolioAssistantMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof askPortfolioAssistant>>, TError,AskPortfolioAssistantMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof askPortfolioAssistant>>, TError,AskPortfolioAssistantMutationVariables, TContext> => {
+
+const mutationKey = getAskPortfolioAssistantMutationKey();
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof askPortfolioAssistant>>, AskPortfolioAssistantMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  askPortfolioAssistant(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AskPortfolioAssistantMutationResult = NonNullable<Awaited<ReturnType<typeof askPortfolioAssistant>>>
+    export type AskPortfolioAssistantMutationBody = BodyType<PortfolioAssistantInput>
+    export type AskPortfolioAssistantMutationError = ErrorType<ErrorResponse>
+    export type AskPortfolioAssistantMutationVariables = {data: BodyType<PortfolioAssistantInput>}
+
+    /**
+ * @summary Ask the read-only portfolio assistant
+ */
+export const useAskPortfolioAssistant = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof askPortfolioAssistant>>, TError,AskPortfolioAssistantMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof askPortfolioAssistant>>,
+        TError,
+        AskPortfolioAssistantMutationVariables,
+        TContext
+      > => {
+      return useMutation(getAskPortfolioAssistantMutationOptions(options));
+    }
 

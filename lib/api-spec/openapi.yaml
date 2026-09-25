@@ -63,6 +63,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
+  /portfolio/assistant:
+    post:
+      operationId: askPortfolioAssistant
+      tags: [portfolio]
+      summary: Ask the read-only portfolio assistant
+      description: Answers from the latest Google Sheet-backed portfolio snapshot without changing project data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioAssistantInput"
+      responses:
+        "200":
+          description: Portfolio assistant answer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortfolioAssistantAnswer"
+        "400":
+          description: Invalid assistant question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 components:
   schemas:
     HealthStatus:
@@ -96,6 +121,8 @@ components:
         - lastTrackerUpdate
         - evidenceCheckpoint
         - notes
+        - googleDriveFolder
+        - documentationStatus
       properties:
         projectId: { type: string }
         project: { type: string }
@@ -119,6 +146,18 @@ components:
         lastTrackerUpdate: { type: string }
         evidenceCheckpoint: { type: string }
         notes: { type: string }
+        googleDriveFolder: { type: string }
+        documentationStatus: { type: string }
+    StageRule:
+      type: object
+      required:
+        - lifecycleStage
+        - levelPercent
+        - gateRule
+      properties:
+        lifecycleStage: { type: string }
+        levelPercent: { type: number }
+        gateRule: { type: string }
     ChangeLogEntry:
       type: object
       required:
@@ -148,6 +187,7 @@ components:
         - syncedAt
         - projects
         - changeLog
+        - stageRules
       properties:
         mode:
           type: string
@@ -161,7 +201,72 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ChangeLogEntry"
+        stageRules:
+          type: array
+          items:
+            $ref: "#/components/schemas/StageRule"
         warning: { type: ["string", "null"] }
+    PortfolioAssistantInput:
+      type: object
+      required:
+        - question
+      properties:
+        question:
+          type: string
+          minLength: 1
+          maxLength: 2000
+    PortfolioAssistantProjectResult:
+      type: object
+      required:
+        - projectId
+        - project
+        - portfolioFamily
+        - tagsSecondaryFamilies
+        - lifecycleStage
+        - status
+        - currentGate
+        - blocker
+        - exactNextAction
+      properties:
+        projectId: { type: string }
+        project: { type: string }
+        portfolioFamily: { type: string }
+        tagsSecondaryFamilies: { type: string }
+        lifecycleStage: { type: string }
+        status: { type: string }
+        currentGate: { type: string }
+        blocker: { type: string }
+        exactNextAction: { type: string }
+    PortfolioAssistantEvidence:
+      type: object
+      required:
+        - label
+        - value
+      properties:
+        label: { type: string }
+        value: { type: string }
+    PortfolioAssistantAnswer:
+      type: object
+      required:
+        - answer
+        - basis
+        - usedAiInterpretation
+        - projects
+        - evidence
+      properties:
+        answer: { type: string }
+        basis:
+          type: string
+          enum: [EXPLICIT SHEET DATA, DERIVED FROM SHEET DATA]
+        usedAiInterpretation: { type: boolean }
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortfolioAssistantProjectResult"
+        evidence:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortfolioAssistantEvidence"
     ErrorResponse:
       type: object
       required: [error]

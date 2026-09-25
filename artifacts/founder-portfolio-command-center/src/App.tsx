@@ -11,6 +11,7 @@ import ProjectDetail from '@/pages/project-detail';
 import Waiting from '@/pages/waiting';
 import BetaLaunch from '@/pages/beta-launch';
 import ChangeLog from '@/pages/change-log';
+import Assistant from '@/pages/assistant';
 import { AppShell } from '@/components/shell';
 import { PortfolioProvider } from '@/lib/portfolio-context';
 import { usePortfolioData } from '@/hooks/use-portfolio-data';
@@ -45,6 +46,7 @@ function Router() {
             <Route path="/waiting" component={Waiting} />
             <Route path="/beta-launch" component={BetaLaunch} />
             <Route path="/change-log" component={ChangeLog} />
+            <Route path="/assistant" component={Assistant} />
             <Route component={NotFound} />
           </Switch>
         </RoutedErrorBoundary>

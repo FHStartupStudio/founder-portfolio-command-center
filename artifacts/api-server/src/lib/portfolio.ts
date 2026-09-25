@@ -1,5 +1,5 @@
 import { createSign } from "node:crypto";
-import type { ChangeLogEntry, PortfolioSnapshot, Project } from "@workspace/api-zod";
+import type { ChangeLogEntry, PortfolioSnapshot, Project, StageRule } from "@workspace/api-zod";
 
 type SheetRow = Record<string, string>;
 
@@ -34,6 +34,8 @@ const sampleProjects: Project[] = [
     lastTrackerUpdate: sampleDate(2),
     evidenceCheckpoint: "Alpha flow is usable end-to-end in the current preview.",
     notes: "High-priority rescue workflow with a narrow first beta.",
+    googleDriveFolder: "",
+    documentationStatus: "",
   },
   {
     projectId: "pawfolio",
@@ -58,6 +60,8 @@ const sampleProjects: Project[] = [
     lastTrackerUpdate: sampleDate(12),
     evidenceCheckpoint: "Prototype screens exist for pet profile and vaccination history.",
     notes: "Blocked on a narrow product decision.",
+    googleDriveFolder: "",
+    documentationStatus: "",
   },
   {
     projectId: "resqlink",
@@ -82,6 +86,8 @@ const sampleProjects: Project[] = [
     lastTrackerUpdate: sampleDate(21),
     evidenceCheckpoint: "",
     notes: "Research queue is intentionally small.",
+    googleDriveFolder: "",
+    documentationStatus: "",
   },
   {
     projectId: "offhours-vet",
@@ -106,6 +112,8 @@ const sampleProjects: Project[] = [
     lastTrackerUpdate: sampleDate(5),
     evidenceCheckpoint: "",
     notes: "Parked while the rescue products move forward.",
+    googleDriveFolder: "",
+    documentationStatus: "",
   },
   {
     projectId: "founder-ops",
@@ -130,6 +138,8 @@ const sampleProjects: Project[] = [
     lastTrackerUpdate: sampleDate(1),
     evidenceCheckpoint: "Read-only portfolio dashboard is functional in Sample Mode.",
     notes: "This command center is itself tracked as a portfolio project.",
+    googleDriveFolder: "",
+    documentationStatus: "",
   },
   {
     projectId: "benefits-navigator",
@@ -154,6 +164,8 @@ const sampleProjects: Project[] = [
     lastTrackerUpdate: sampleDate(8),
     evidenceCheckpoint: "Questionnaire prototype is mapped to a first set of benefit programs.",
     notes: "High potential, but source quality is the gating issue.",
+    googleDriveFolder: "",
+    documentationStatus: "",
   },
   {
     projectId: "quiet-faith",
@@ -177,6 +189,8 @@ const sampleProjects: Project[] = [
     lastTrackerUpdate: sampleDate(4),
     evidenceCheckpoint: "Core reflection flow is complete and repeatable.",
     notes: "Keep the first experience private and focused.",
+    googleDriveFolder: "",
+    documentationStatus: "",
   },
   {
     projectId: "directory-factory",
@@ -200,6 +214,8 @@ const sampleProjects: Project[] = [
     lastTrackerUpdate: sampleDate(3),
     evidenceCheckpoint: "Closed beta users completed the core discovery flow.",
     notes: "Ready for a controlled first launch.",
+    googleDriveFolder: "",
+    documentationStatus: "",
   },
 ];
 
@@ -239,11 +255,27 @@ const sampleChangeLog: ChangeLogEntry[] = [
   },
 ];
 
+const sampleStageRules: StageRule[] = [
+  { lifecycleStage: "Idea & Research", levelPercent: 5, gateRule: "Problem/opportunity defined; research underway." },
+  { lifecycleStage: "Product Decisions", levelPercent: 10, gateRule: "Core scope and product decisions locked." },
+  { lifecycleStage: "Validation", levelPercent: 20, gateRule: "Demand, feasibility, supply, or operating assumptions being tested." },
+  { lifecycleStage: "Prototype", levelPercent: 30, gateRule: "Usable prototype exists; founder review/decisions remain." },
+  { lifecycleStage: "Founder Alpha Build", levelPercent: 40, gateRule: "Core Alpha implementation actively being built." },
+  { lifecycleStage: "Founder Alpha Verification", levelPercent: 50, gateRule: "Alpha behavior is being verified against the intended use." },
+  { lifecycleStage: "Backend / Production Foundation", levelPercent: 60, gateRule: "Production backend, data, and operational foundations are being completed." },
+  { lifecycleStage: "Founder Beta / Pre-Beta", levelPercent: 70, gateRule: "Founder-led beta preparation and verification are underway." },
+  { lifecycleStage: "Closed Beta Ready", levelPercent: 80, gateRule: "The project is ready to begin a controlled closed beta." },
+  { lifecycleStage: "Closed Beta Active", levelPercent: 90, gateRule: "A controlled closed beta is active." },
+  { lifecycleStage: "Launch Ready", levelPercent: 95, gateRule: "Launch requirements are complete and ready for release." },
+  { lifecycleStage: "Live", levelPercent: 100, gateRule: "The project is released and operating live." },
+];
+
 export const sampleSnapshot = (): PortfolioSnapshot => ({
   mode: "SAMPLE MODE",
   syncedAt: new Date().toISOString(),
   projects: sampleProjects,
   changeLog: sampleChangeLog,
+  stageRules: sampleStageRules,
   warning: null,
 });
 
@@ -298,6 +330,8 @@ const projectFromRow = (row: SheetRow, index: number): Project => {
     lastTrackerUpdate: first(row, "Last Tracker Update"),
     evidenceCheckpoint: first(row, "Evidence / Checkpoint"),
     notes: first(row, "Notes"),
+    googleDriveFolder: first(row, "Google Drive Folder"),
+    documentationStatus: first(row, "Documentation Status"),
   };
 };
 
@@ -311,6 +345,12 @@ const changeLogFromRow = (row: SheetRow): ChangeLogEntry => ({
   gateChange: first(row, "Gate / Change", "Gate Change"),
   evidence: first(row, "Evidence"),
   updatedBy: first(row, "Updated By"),
+});
+
+const stageRuleFromRow = (row: SheetRow): StageRule => ({
+  lifecycleStage: first(row, "Lifecycle Stage"),
+  levelPercent: numberValue(first(row, "Level %", "Level Percent")),
+  gateRule: first(row, "Gate Rule"),
 });
 
 const base64Url = (value: string | Buffer) =>
@@ -354,6 +394,7 @@ const fetchLiveSnapshot = async (): Promise<PortfolioSnapshot> => {
   const url = new URL(`https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(sheetId)}/values:batchGet`);
   url.searchParams.append("ranges", "Projects");
   url.searchParams.append("ranges", "Change Log");
+  url.searchParams.append("ranges", "Stage Rules");
   url.searchParams.set("majorDimension", "ROWS");
   const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   if (!response.ok) throw new Error(`Google Sheets request failed (${response.status})`);
@@ -363,8 +404,9 @@ const fetchLiveSnapshot = async (): Promise<PortfolioSnapshot> => {
   const changeLog = asRows(ranges[1]?.values).map(changeLogFromRow).sort((a, b) =>
     new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
   );
+  const stageRules = asRows(ranges[2]?.values).map(stageRuleFromRow);
   if (projects.length === 0) throw new Error("Google Sheets returned no project rows");
-  return { mode: "LIVE DATA", syncedAt: new Date().toISOString(), projects, changeLog, warning: null };
+  return { mode: "LIVE DATA", syncedAt: new Date().toISOString(), projects, changeLog, stageRules, warning: null };
 };
 
 export const getPortfolioSnapshot = async (): Promise<PortfolioSnapshot> => {

@@ -8,12 +8,14 @@
 import type { ChangeLogEntry } from './changeLogEntry';
 import type { PortfolioSnapshotMode } from './portfolioSnapshotMode';
 import type { Project } from './project';
+import type { StageRule } from './stageRule';
 
 export interface PortfolioSnapshot {
   mode: PortfolioSnapshotMode;
   syncedAt: string;
   projects: Project[];
   changeLog: ChangeLogEntry[];
+  stageRules: StageRule[];
   /** @nullable */
   warning?: string | null;
 }

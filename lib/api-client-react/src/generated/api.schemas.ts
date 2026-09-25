@@ -32,6 +32,14 @@ export interface Project {
   lastTrackerUpdate: string;
   evidenceCheckpoint: string;
   notes: string;
+  googleDriveFolder: string;
+  documentationStatus: string;
+}
+
+export interface StageRule {
+  lifecycleStage: string;
+  levelPercent: number;
+  gateRule: string;
 }
 
 export interface ChangeLogEntry {
@@ -59,8 +67,50 @@ export interface PortfolioSnapshot {
   syncedAt: string;
   projects: Project[];
   changeLog: ChangeLogEntry[];
+  stageRules: StageRule[];
   /** @nullable */
   warning?: string | null;
+}
+
+export interface PortfolioAssistantInput {
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  question: string;
+}
+
+export interface PortfolioAssistantProjectResult {
+  projectId: string;
+  project: string;
+  portfolioFamily: string;
+  tagsSecondaryFamilies: string;
+  lifecycleStage: string;
+  status: string;
+  currentGate: string;
+  blocker: string;
+  exactNextAction: string;
+}
+
+export interface PortfolioAssistantEvidence {
+  label: string;
+  value: string;
+}
+
+export type PortfolioAssistantAnswerBasis = typeof PortfolioAssistantAnswerBasis[keyof typeof PortfolioAssistantAnswerBasis];
+
+
+export const PortfolioAssistantAnswerBasis = {
+  EXPLICIT_SHEET_DATA: 'EXPLICIT SHEET DATA',
+  DERIVED_FROM_SHEET_DATA: 'DERIVED FROM SHEET DATA',
+} as const;
+
+export interface PortfolioAssistantAnswer {
+  answer: string;
+  basis: PortfolioAssistantAnswerBasis;
+  usedAiInterpretation: boolean;
+  projects: PortfolioAssistantProjectResult[];
+  evidence: PortfolioAssistantEvidence[];
 }
 
 export interface ErrorResponse {
