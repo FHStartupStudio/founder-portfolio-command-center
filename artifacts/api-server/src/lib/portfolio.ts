@@ -335,6 +335,11 @@ const projectFromRow = (row: SheetRow, index: number): Project => {
   };
 };
 
+export const mapProjectRows = (values: string[][] | undefined): Project[] =>
+  asRows(values)
+    .filter((row) => first(row, "Project").trim().length > 0)
+    .map(projectFromRow);
+
 const changeLogFromRow = (row: SheetRow): ChangeLogEntry => ({
   timestamp: first(row, "Timestamp", "Date"),
   project: first(row, "Project"),
@@ -400,7 +405,7 @@ const fetchLiveSnapshot = async (): Promise<PortfolioSnapshot> => {
   if (!response.ok) throw new Error(`Google Sheets request failed (${response.status})`);
   const body = (await response.json()) as { valueRanges?: Array<{ values?: string[][] }> };
   const ranges = body.valueRanges ?? [];
-  const projects = asRows(ranges[0]?.values).map(projectFromRow);
+  const projects = mapProjectRows(ranges[0]?.values);
   const changeLog = asRows(ranges[1]?.values).map(changeLogFromRow).sort((a, b) =>
     new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
   );

@@ -1,7 +1,32 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { PortfolioSnapshot, Project } from "@workspace/api-zod";
+import { mapProjectRows } from "./portfolio.ts";
 import { buildAssistantMessages, retrievePortfolioContext } from "./portfolio-assistant-retrieval.ts";
+
+test("project mapping excludes trailing rows with tags but no project name", () => {
+  const projects = mapProjectRows([
+    ["Project ID", "Project", "Portfolio Family", "Tags / Secondary Families", "Lifecycle Stage", "Status"],
+    ["named-project", "Named Project", "Tools", "", "Validation", "Active"],
+    ["", "", "", "Directory", "", ""],
+    ["", "", "", "", "", ""],
+  ]);
+
+  assert.equal(projects.length, 1);
+  assert.equal(projects[0].projectId, "named-project");
+  assert.equal(projects[0].project, "Named Project");
+});
+
+test("project mapping retains named records even when Project ID is missing", () => {
+  const projects = mapProjectRows([
+    ["Project ID", "Project", "Tags / Secondary Families"],
+    ["", "New Legitimate Project", "Directory"],
+  ]);
+
+  assert.equal(projects.length, 1);
+  assert.equal(projects[0].project, "New Legitimate Project");
+  assert.equal(projects[0].projectId, "new-legitimate-project");
+});
 
 const project = (overrides: Partial<Project>): Project => ({
   projectId: "base",
